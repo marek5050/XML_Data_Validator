@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<basic_party_registration:basicPartyRegistrationMessage 
+    xmlns:basic_party_registration="urn:gs1:gdsn:basic_party_registration:xsd:3" 
+    xmlns:sh="http://www.unece.org/cefact/namespaces/StandardBusinessDocumentHeader" 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:gs1:gdsn:basic_party_registration:xsd:3 ../Schemas/gs1/gdsn/BasicPartyRegistration.xsd">
+    <sh:StandardBusinessDocumentHeader>
+        <sh:HeaderVersion>1.0</sh:HeaderVersion>
+        <sh:Sender>
+            <sh:Identifier Authority="GS1">8712345678913</sh:Identifier>
+        </sh:Sender>
+        <sh:Receiver>
+            <sh:Identifier Authority="GS1">9712345678912</sh:Identifier>
+            <!--Mandatory, but can be left empty.-->
+        </sh:Receiver>
+        <sh:DocumentIdentification>
+            <sh:Standard>GS1</sh:Standard>
+            <sh:TypeVersion>3.1</sh:TypeVersion>
+            <sh:InstanceIdentifier>20051101</sh:InstanceIdentifier>
+            <sh:Type>basicPartyRegistration</sh:Type>
+            <sh:CreationDateAndTime>2011-03-11T11:00:00.000-05:00</sh:CreationDateAndTime>
+        </sh:DocumentIdentification>
+    </sh:StandardBusinessDocumentHeader>
+    <!-- Party here refers to a Facility, as well. -->
+    <party>
+        <!-- isPartyActive will be set to False, if a facility is closed etc. -->
+        <isPartyActive>true</isPartyActive>
+        <!-- MANDATORY: If this is false, then the information here is NOT retrievable -->
+        <registeringParty>0614141008889</registeringParty>
+        <!-- MANDATORY: GLN of Retailer home office -->
+        <gln>0614141008889</gln>
+        <!-- MANDATORY: GLN of the party being registered -->
+        <partyAddress>
+            <!-- MANDATORY: This section is Mandatory; However, some of the fields below are optional. -->
+            <city>Atlanta</city>
+            <!-- MANDATORY -->
+            <countryCode>123</countryCode>
+            <!-- GS1 specified country code : MANDATORY : https://en.wikipedia.org/wiki/List_of_GS1_country_codes  [TBD] -->
+            <languageOfThePartyCode>en</languageOfThePartyCode>
+            <!-- OPTIONAL -->
+            <name>Mondial Distribution</name>
+            <!-- MANDATORY -->
+            <postalCode>07654</postalCode>
+            <!-- MANDATORY -->
+            <!-- *** BEGIN: THE FIELDS BELOW ARE OPTIONAL *** -->
+            <cityCode>xyz</cityCode>
+            <countyCode>xyz</countyCode>
+            <crossStreet>xyz</crossStreet>
+            <pOBoxNumber>15</pOBoxNumber>
+            <state>Georgia</state>
+            <provinceCode>xyz</provinceCode>
+            <streetAddressOne>1 Peachtree Avenue</streetAddressOne>
+            <streetAddressTwo>Suite 911</streetAddressTwo>
+            <geographicalCoordinates>
+                <latitude>33.24</latitude>
+                <longitude>-83.44</longitude>
+            </geographicalCoordinates>
+            <!-- *** END: THE FIELDS ABOVE ARE OPTIONAL *** -->
+        </partyAddress>
+        <partyContact>
+            <!-- OPTIONAL (BEGIN): The whole section below is optional. -->
+            <contactTypeCode>AP</contactTypeCode>
+            <personName>Bill Vasserneuse</personName>
+            <communicationChannel>
+                <communicationChannelCode>TELEPHONE</communicationChannelCode>
+                <communicationValue>3738388383</communicationValue>
+            </communicationChannel>
+            <!-- /OPTIONAL (END) -->
+        </partyContact>
+        <partyRole>
+            <!-- MANDATORY: The section below describes the role that this party/facility is playing.
+                                    For example, whether this is a DC or a Store or Homeoffice, etc. -->
+            <partyName>SomeRetailer</partyName>
+            <!-- MANDATORY -->
+            <partyRoleCode>DISTRIBUTOR</partyRoleCode>
+            <!-- MANDATORY : Limit this standard GS1 codes: http://apps.gs1.org/GDD/Pages/clDetails.aspx?semanticURN=urn:gs1:gdd:cl:PartyRoleCode&release=3 -->
+        </partyRole>
+    </party>
+</basic_party_registration:basicPartyRegistrationMessage>

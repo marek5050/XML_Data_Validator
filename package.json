@@ -1,0 +1,18 @@
+{
+  "name": "gbs-foodsafety.github.ibm.com",
+  "version": "1.0.0",
+  "description": "* GS1 Standards validator * XML validator * XML Linkage checker * SAP Connector",
+  "main": "orgs.js",
+  "directories": {
+    "example": "examples"
+  },
+  "scripts": {
+    "start": "python2.7 -m SimpleHTTPServer 8000"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.ibm.com:GBS-FoodSafety/GBS-FoodSafety.github.ibm.com.git"
+  },
+  "author": "",
+  "license": "ISC"
+}

@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<order:orderMessage 
+    xmlns:order="urn:gs1:ecom:order:xsd:3" 
+    xmlns:sh="http://www.unece.org/cefact/namespaces/StandardBusinessDocumentHeader" 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:gs1:ecom:order:xsd:3 ../Schemas/gs1/ecom/Order.xsd">
+    <sh:StandardBusinessDocumentHeader>
+        <sh:HeaderVersion>1.0</sh:HeaderVersion>
+        <sh:Sender>
+            <!-- Retailer Information : Ex. Walmart -->
+            <sh:Identifier Authority="GS1"/>
+            <sh:ContactInformation>
+                <!-- Retailer contact information -->
+                <sh:Contact>John Doe</sh:Contact>
+                <sh:EmailAddress>John_Doe@purchasing.XYZretailer.com</sh:EmailAddress>
+                <sh:FaxNumber>+1-212-555-1213</sh:FaxNumber>
+                <sh:TelephoneNumber>+1-212-555-2122</sh:TelephoneNumber>
+                <sh:ContactTypeIdentifier>Buyer</sh:ContactTypeIdentifier>
+            </sh:ContactInformation>
+        </sh:Sender>
+        <sh:Receiver>
+            <!-- Shipper contact information -->
+            <sh:Identifier Authority="GS1"/>
+            <sh:ContactInformation>
+                <sh:Contact>Mary Smith</sh:Contact>
+                <sh:EmailAddress>Mary_Smith@widgets.com</sh:EmailAddress>
+                <sh:FaxNumber>+1-312-555-1214</sh:FaxNumber>
+                <sh:TelephoneNumber>+1-312-555-2125</sh:TelephoneNumber>
+                <sh:ContactTypeIdentifier>Seller</sh:ContactTypeIdentifier>
+            </sh:ContactInformation>
+        </sh:Receiver>
+        <sh:DocumentIdentification>
+            <sh:Standard>GS1</sh:Standard>
+            <sh:TypeVersion>3.3</sh:TypeVersion>
+            <sh:InstanceIdentifier>100002</sh:InstanceIdentifier>
+            <sh:Type>order</sh:Type>
+            <sh:MultipleType>false</sh:MultipleType>
+            <sh:CreationDateAndTime>2011-04-08T14:58:56.591Z</sh:CreationDateAndTime>
+        </sh:DocumentIdentification>
+    </sh:StandardBusinessDocumentHeader>
+    <!-- ********************************************************************************** -->
+    <!-- NOTE : Comments for a field appear BELOW the field -->
+    <!-- This is a Purchase Order, submitted from a Retailer to a Supplier.
+         Currently, retailer sends a copy ("shadows") of the PO, in this format to the Blockchain.
+         Every field here, unless indicated as OPTIONAL are Mandatory!  -->
+    <!-- ********************************************************************************** -->
+    <order>
+        <creationDateTime>2011-04-08T14:58:56.591Z</creationDateTime>
+        <!-- Purchase Order CreationDate And Time : Created by Retailer
+             UTC time (ISO 8601) when the PO was created. -->
+        <documentStatusCode>ORIGINAL</documentStatusCode>
+        <!-- Do not change. -->
+        <orderIdentification>
+            <entityIdentification>urn:epcglobal:cbv:bt:5412345000037:PO3352</entityIdentification>
+            <!-- urn:epcglobal:cbv:bt:ShipToGLN:PONumber -->
+            <!-- Retailer Purchase Order Number: The format for this is urn:epcglobal:cbv:bt:<gln>:<po-number>,
+                 where <gln> is the "shipTo" GLN (below) AND  <po-number> should NOT contain a ":" character.  
+                 Using this notation allows a supplier to put in a reference to this PO (using the same format) 
+                 from other EPCIS events and Business Txn documents.
+                 Reference: https://www.gs1.org/sites/default/files/docs/epc/CBV-Standard-1-2-1-r-2017-05-05.pdf  [Section 8.5.2] -->
+        </orderIdentification>
+        <orderTypeCode>220</orderTypeCode>
+        <!-- Code for buyer to order (220 is default).
+             For other codes, refer: https://www.gs1.org/sites/default/files/docs/eancom/ean02s3/part3/dc43.htm#11001/220 -->
+        <buyer>
+            <gln>5412345000013</gln>
+            <!-- Retailer Home office GLN -->
+        </buyer>
+        <seller>
+            <gln>4098765000010</gln>
+            <!-- OPTIONAL: Shipper Home office gln : need to be communicated from the seller(shipper) to buyer(retailer). -->
+        </seller>
+        <!-- NOTE: <seller>, </seller> tags should not be omitted even if <gln> is omitted. -->
+        <orderLogisticalInformation>
+            <shipFrom>
+                <gln>4098765000010</gln>
+                <!-- OPTIONAL: Shipper Dispatch location GLN (factory). This is mandatory in the associated DA(s) -->
+            </shipFrom>
+            <shipTo>
+                <gln>5412345000037</gln>
+                <!-- MANDATORY: Retailer Receiving location gln (Distribution Centre) -->
+            </shipTo>
+            <orderLogisticalDateInformation>
+                <requestedDeliveryDateTime>
+                    <date>2011-04-11</date>
+                    <!-- Requested Delivery date (ISO8601 i.e. yyyy-mm-dd) at Retailer Receiving location when the PO was created. -->
+                </requestedDeliveryDateTime>
+            </orderLogisticalDateInformation>
+        </orderLogisticalInformation>
+        <!-- NOTE: We will also reflect the orderLogisticalInformation at a LineItem level for future/other retailers. -->
+        <orderLineItem>
+            <lineItemNumber>1</lineItemNumber>
+            <!-- Numerical Sequential number for items in the PO -->
+            <requestedQuantity measurementUnitCode="EA">48</requestedQuantity>
+            <!-- item requested/ordered Quantity by the Retailer with measurement Unit Attribute-->
+            <transactionalTradeItem>
+                <gtin>40987650000223</gtin>
+                <!-- GS1-14 representation of item ordered by the Retailer-->
+            </transactionalTradeItem>
+        </orderLineItem>
+        <orderLineItem>
+            <lineItemNumber>2</lineItemNumber>
+            <!-- Numerical Sequential number for next item in the PO -->
+            <requestedQuantity measurementUnitCode="EA">24</requestedQuantity>
+            <!-- item requested/ordered Quantity by the Retailer with measurement Unit Attribute-->
+            <transactionalTradeItem>
+                <gtin>40987650000346</gtin>
+                <!-- GS1-14 representation of item ordered by the Retailer-->
+            </transactionalTradeItem>
+        </orderLineItem>
+    </order>
+</order:orderMessage>

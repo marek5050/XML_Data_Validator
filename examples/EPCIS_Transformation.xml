@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<epcis:EPCISDocument 
+  xmlns:epcis="urn:epcglobal:epcis:xsd:1" 
+  xmlns:cbvmda="urn:epcglobal:cbv:mda" 
+  xmlns:example="http://ns.example.com/epcis" 
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  creationDate="2005-07-11T11:30:47.0Z" schemaVersion="1.2">
+  <EPCISBody>
+    <EventList>
+    <extension>
+      <TransformationEvent>
+        <eventTime>2013-06-08T14:58:56.591Z</eventTime> 
+        <!--WHEN-->
+        <!--MANDATORY. UTC time (ISO 8601) when event occurred.-->
+        <eventTimeZoneOffset>+02:00</eventTimeZoneOffset> 
+        <!--MANDATORY. Time-zone of location, as an offset from UTC.-->
+        <baseExtension> 
+          <eventID>urn:uuid:6926712e-599f-4c4e-b6e9-8dd888c906bd</eventID> 
+          <!--OPTIONAL. Unique ID for the event. If not specified, it will be assigned by the system and returned in the body of the response.-->
+        </baseExtension> 
+        <inputEPCList>
+          <epc>urn:epc:id:sgtin:0614141.107346.2017</epc>
+          <!--Additional entries go here-->
+        </inputEPCList>
+        <!--WHAT-->
+        <!--MANDATORY that either inputEPCList or inputQuantityList (see below) be present.-->
+        <!--List of instance-level objects (SSCC, SGTIN) which are input to transformation.--> 
+        <!--LGTINs and other class-level objects go in quantityList (see below)-->
+        <!--General SGTIN syntax: urn:epc:id:sgtin:CompanyPrefix.ItemRefAndIndicator.SerialNumber-->
+        <!--CompanyPrefix.ItemRefAndIndicator ahould have 13 digits (without counting dots).-->
+        <!--CompanyPrefix is equal to the CompanyPrefix derived from GTIN-14.-->
+        <!--ItemRefAndIndicator is formed by concatenating the first digit (Indicator) from GTIN-14 with ItemRef digits from GTIN-14.-->
+        <!--GTIN-14 check digit is dropped.--> 
+        <!--GTIN-12 or GTIN-13 should first be converted to GTIN-14 by adding leading 0s before above conversion.-->
+        <!--General EPC SSCC syntax: urn:epc:id:sscc:CompanyPrefix.SerialRefAndExtension-->
+        <!--EPC SSCC is 17 digits-->
+        <!--CompanyPrefix is equal to the CompanyPrefix in GS1 SSCC-->
+        <!--SerialReferenceAndExtension is formed by concatenating the first digit (Extension) from GS1 SSCC with SerialRef digits from GS1 SSCC.-->
+        <!--GS1 SSCC check digit is dropped.-->
+        <inputQuantityList>
+            <quantityElement>
+              <epcClass>urn:epc:class:lgtin:0614141.107346.101</epcClass> 
+              <!--MANDATORY for quantityElement. Class-level EPCs like LGTINs. See note below for description.--> 
+              <quantity>10</quantity>
+              <!--MANDATORY for quantityElement.-->
+              <!--Meaning: 10 cases of LGTIN '0614141.107346' belonging to lot '101'-->
+              <uom>CS</uom>
+              <!--MANDATORY for quantityElement. Item quantity unit of measurement. "CS" = Case. Also valid: KG, KGM, EA.-->
+              <!--From https://www.unece.org/fileadmin/DAM/cefact/recommendations/rec20/rec20_rev3_Annex2e.pdf.--> 
+            </quantityElement>
+	          <!--Additional quantityElement entries go here.-->
+        </inputQuantityList>
+        <!--WHAT-->
+        <!--MANDATORY that either inputEPCList or inputQuantityList be present.-->
+        <!--List of class-level objects like LGTINS (GTIN+lot) which are input to the transformation, along with quantity and unit of measure.-->
+        <!--LGTINs should be constructed to be as unique as possible; by concatenating time/dtae of creation with object id, e.g.-->
+        <!--General LGTIN syntax: urn:epc:class:lgtin:CompanyPrefix.ItemRefAndIndicator.Lot-->
+        <!--CompanyPrefix.ItemRefAndIndicator ahould have 13 digits (without counting dots).-->
+        <!--CompanyPrefix is equal to the CompanyPrefix derived from GTIN.-->
+        <!--ItemRefAndIndicator is formed by concatenating the first digit (Indicator) from GTIN with ItemRef digits from GTIN.-->
+        <!--GTIN check digit is dropped.-->
+        <!--If a GTIN (without lot) is to be represented, the following syntax is used:-->
+        <!--From Page 35 of https://www.gs1.org/sites/default/files/docs/epc/CBV-Standard-1-2-1-r-2017-05-05.pdf:-->
+        <!--urn:epc:idpat:sgtin:CompanyPrefix.ItemRefAndIndicator.* where -->
+        <!--CompanyPrefix.ItemRefAndIndicator is 13 digits as above.-->
+        <outputEPCList>
+          <epc>urn:epc:id:sgtin:0614141.107346.2018</epc>
+          <!--Additional entries go here-->
+        </outputEPCList>
+        <outputQuantityList>
+            <quantityElement>
+              <epcClass>urn:epc:class:lgtin:0614141.107346.102</epcClass> 
+              <!--MANDATORY for quantityElement. Class-level EPCs like LGTINs. See note below for description.--> 
+              <quantity>10</quantity>
+              <!--MANDATORY for quantityElement.-->
+              <!--Meaning: 10 cases of LGTIN '0614141.107346' belonging to lot '101'-->
+              <uom>CS</uom>
+              <!--MANDATORY for quantityElement. Item quantity unit of measurement. "CS" = Case. Also valid: KG, KGM, EA.-->
+              <!--From https://www.unece.org/fileadmin/DAM/cefact/recommendations/rec20/rec20_rev3_Annex2e.pdf.--> 
+            </quantityElement>
+	          <!--Additional quantityElement entries go here.-->
+        </outputQuantityList>
+        <!--WHAT-->
+        <!--MANDATORY that either outputEPCList or outputQuantityList be present.-->
+        <!--Lists of instance-level or class-level outputs of transformation.-->
+        <bizStep>urn:epcglobal:cbv:bizstep:commissioning</bizStep> 
+        <!--OPTIONAL. From http://apps.gs1.org/GDD/Pages/clDetails.aspx?semanticURN=urn:gs1:gdd:cl:EPCISBusinessStep&release=1.-->
+        <!--The business step that this event was a part of.-->
+        <disposition>urn:epcglobal:cbv:disp:active</disposition>
+        <!--OPTIONAL. From http://apps.gs1.org/GDD/Pages/clDetails.aspx?semanticURN=urn:gs1:gdd:cl:EPCISDisposition&release=1.-->
+        <!--The condition of the objects after this event.-->
+        <readPoint><id>urn:epc:id:sgln:0614141.00777.0</id></readPoint>
+        <!--OPTIONAL: SGLN for point at which item was transformed. Used if multiple facilities GLNs (look below for the Mandatory GLN).-->
+        <!--General syntax of SGLN: urn:epc:id:sgln:CompanyPrefix.LocationReference.Extension-->
+        <!--CompanyPrefix.LocationReference are the first 12 digits of GLN (13th check digit is not included).-->
+        <!--Extension can be a single 0 digit (denoting no extension), or can be any number of digits without leading zeros-->
+        <!--REMOVE FOLLOWING COMMENTS BEFORE SENDING TO CLIENT-->
+        <!--We had initially decided that we'd ask clients to omit the dots in the GLN.-->
+        <!--This seems like a bad idea for multiple reasons. Clients should preferably send us GLNs in the GS1 format.-->
+        <bizLocation><id>urn:epc:id:sgln:0614141.00888.0</id></bizLocation>
+        <!--WHERE-->
+        <!--MANDATORY: SGLN (extensible global location number) for the business location where the event occurred.-->
+        <!--See above for SGLN format--> 
+        <bizTransactionList>
+          <bizTransaction type="urn:epcglobal:cbv:btt:prodorder">urn:epcglobal:cbv:bt:0614141000005:123 </bizTransaction>
+          <bizTransaction type="urn:epcglobal:cbv:btt:desadv">urn:epcglobal:cbv:bt:0614141073467:1152</bizTransaction>
+          <!--Additional entries go here-->
+	      </bizTransactionList>
+        <!--WHY-->
+        <!--OPTIONAL. From Page 28 of https://www.gs1.org/sites/default/files/docs/epc/CBV-Standard-1-2-1-r-2017-05-05.pdf-->
+        <!--List of business transactions associated with this event.-->
+        <!--The example above shows a production order and a despatch advice (ASN)-->
+        <!--General syntax: urn:epcglobal:cbv:bt:GLN:TransactionID-->
+        <!--Where GLN is the 13-digit GLN of the party that defines the transaction.-->
+        <!--NOTE: Even though this field is optional, our provenance graph uses events as backbones while tracing.-->
+        <!--Thus transaction linkages to EPCIS events are required if the client wants correct transaction ordering during trace queries.-->
+
+        <extension>
+          <ilmd>
+            <cbvmda:itemExpirationDate>2015-03-15</cbvmda:itemExpirationDate>
+            <cbvmda:sellByDate>2015-03-15</cbvmda:sellByDate>
+            <cbvmda:bestBeforeDate>2015-03-15</cbvmda:bestBeforeDate>
+          </ilmd>
+          <!--OPTIONAL in general: Master data associated with the output item instances or lots.-->
+          <!--Depending on the client and the process step, some of this data might be MANDATORY.-->
+          <!--Expiration/sell-by/best-before dates are especially important from a query perspective, and should be mandated wherever applicable.-->
+          <!--ILMD applies to all objects in outputEPCList and outputQuantityList--> 
+          <!--ILMD should include one or more elements per Section 9.2 in:-->
+          <!--https://www.gs1.org/sites/default/files/docs/epc/CBV-Standard-1-2-1-r-2017-05-05.pdf-->
+        </extension>
+        <!--NOTE: if sourceList, destinationList and ilmd are all omitted, remove the inner extension and /extension tags (i.e. lines 116, 140).-->
+      </TransformationEvent>
+    </extension>
+    </EventList>
+  </EPCISBody>
+</epcis:EPCISDocument>

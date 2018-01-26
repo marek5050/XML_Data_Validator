@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<!-- saved from url=(0043)http://getbootstrap.com/examples/jumbotron/ -->
+<html lang="en"  ng-app="phonecatApp"><head>
+    <!--<script src="//cdn.optimizely.com/js/1141215513.js"></script>-->
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!--<script>-->
+        <!--document.write('<script src="http://' + (location.host || 'localhost').split(':')[0] +-->
+            <!--':35729/livereload.js?snipver=1"></' + 'script>')-->
+    <!--</script>-->
+
+
+    <title>IBM @ Github</title>
+
+    <link href="./css/bootstrap.min.css" rel="stylesheet">
+
+    <link href="./css/ngtable.css" rel="stylesheet">
+    <!--<link href="./css/ng-tags-input.css" rel="stylesheet">-->
+    <link href="./css/style.css" rel="stylesheet">
+    <link rel="icon" href="http://ibm.github.io/favicon.ico" type="image/vnd.microsoft.icon" />
+
+    <script src="js/vendor/angular.js"></script>
+    <!--<script src="js/vendor/ng-tags-input.js"></script>-->
+    <script src="js/vendor/ng-file-upload-shim.js"></script>
+    <script src="js/vendor/ng-file-upload.js"></script>
+    <script src="js/vendor/ngtable.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/gs1.component.js"></script>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body style="font-size:12px;">
+
+<script type="text/ng-template" id="custom/pager">
+    <ul class="pager ng-cloak" style="list-style:none;width:100%;">
+        <li ng-repeat="page in pages"
+            ng-class="{'disabled': !page.active, 'previous': page.type == 'prev', 'next': page.type == 'next'}"
+            ng-show="page.type == 'prev' || page.type == 'next'" ng-switch="page.type">
+            <a ng-switch-when="prev" ng-click="params.page(page.number)" href="">&laquo; Previous</a>
+            <a ng-switch-when="next" ng-click="params.page(page.number)" href="">Next &raquo;</a>
+        </li>
+        <li ng-if="pages.length > 0">
+            <div class="btn-group btn-group-sm">
+                <button type="button" ng-class="{'active':params.count() == 10}" ng-click="params.count(10)" class="btn btn-default btn-sm">10</button>
+                <button type="button" ng-class="{'active':params.count() == 25}" ng-click="params.count(25)" class="btn btn-default btn-sm">25</button>
+                <button type="button" ng-class="{'active':params.count() == 50}" ng-click="params.count(50)" class="btn btn-default btn-sm">50</button>
+                <button type="button" ng-class="{'active':params.count() == 100}" ng-click="params.count(100)" class="btn btn-default btn-sm">100</button>
+            </div>
+        </li>
+    </ul>
+</script>
+
+<div class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="http://www.ibm.com"><img src="images/ibmneg_white_42x20.png" alt="IBM"></a>
+        <div class="navbar-header">
+        </div>
+    </div>
+</div>
+
+<!-- Main jumbotron for a primary marketing message or call to action -->
+<div class="jumbotron">
+    <div class="container">
+        <h1>GBS Food Safety Team</h1>
+        <div class="leadspace-buttons">
+            <a href="https://github.ibm.com/GBS-FoodSafety/Product_GTIN_Lot_Retrieval/blob/master/OCR%20Lot%20extractor.ipynb">
+                <b class="btn btn-primary btn-lg btn-custom-jazz"><b>PoC Scanning Lot information</b></br>Using ML to retrieve product lot information?</b>
+            </a>
+            <a href="https://github.ibm.com/GBS-FoodSafety/Data_cleanup_XML_invalidator">
+                <p class="btn btn-primary btn-lg btn-custom-bm"><b>XML Invalidator</b>How to alter or remove EPCIS events from the FSS</p>
+            </a>
+            <a href="https://github.ibm.com/cloudlab/all" >
+                <p class="btn btn-primary btn-lg btn-custom-dw"><b>Dockerized</b>
+                    Run the Food Safety Solution locally<br/> using Docker.
+                </p>
+            </a>
+        </div>
+    </div>
+</div>
+<div>
+</div>
+<div ng-controller="MyCtrl" class="container-fluid">
+
+    <div class="row">
+    <div class="col" style="min-height:200px">
+        <div ngf-drop ngf-select ng-model="files" class="card drop-box"
+             ngf-drag-over-class="'dragover'" ngf-multiple="true" ngf-allow-dir="true"
+             accept="text/xml, application/xml"
+             ngf-pattern="text/xml, application/xml">Drop XML files here or click to upload</div>
+        <div ngf-no-file-drop>File Drag/Drop is not supported for this browser</div>
+        <a class="btn btn-primary" href="#" role="button" ng-click="loadSample()">Load Sample Data</a>
+    </div>
+    <div class="col" style="overflow:auto;height:100%;max-height:300px;">
+        Files:
+            <ul>
+                <li ng-repeat="f in files" style="font-size:smaller">
+                    {{f.name || f}}
+                </li>
+            </ul>
+    </div>
+    <div class="col-5">
+        <strong>Extras</strong>
+            <gs1validator></gs1validator>
+    </div>
+
+    </div>
+
+    <h3>Master Data Item</h3>
+    <table  ng-table="itemsTableParams" template-pagination="custom/pager" class="table table-condensed table-bordered table-striped">
+        <tr ng-repeat="row in $data" ng-class="{'bg-danger': (row.gtin.value.length==0) }">
+            <td data-title="'GTIN'" sortable="'gtin'">{{row.gtin.value}}</td>
+            <td data-title="'Description'">{{row.tradeItemDescription}}</td>
+            <td data-title="'Calculated LGTIN'">{{row.gtin.lgtin}}</td>
+            <td data-title="'Filename'">{{row.opts.filename}}</td>
+        </tr>
+    </table>
+
+    <h3>Master Data Facility</h3>
+    <table  ng-table="facilitiesTableParams" template-pagination="custom/pager" class="table table-condensed table-bordered table-striped">
+        <tr ng-repeat="row in $data" ng-class="{'bg-danger': (row.gln.value.length==0) }">
+            <td data-title="'GLN'" sortable="'gln'">{{row.gln}}</td>
+            <td data-title="'PartyName'" sortable="'partyName'">{{row.partyName}}</td>
+            <td data-title="'SGLN'" >{{row.gln.sgln}}</td>
+            <td data-title="'Filename'">{{row.opts.filename}}</td>
+            <!--ng-class="(checkSGLN)? 'badge badge-success':'badge badge-danger'"-->
+        </tr>
+    </table>
+
+    <h3>Object events <small>(commission,observation, decommission)</small></h3>
+    <table  ng-table="objectTableParams" template-pagination="custom/pager" class="table table-condensed table-bordered table-striped">
+        <tr ng-repeat="row in $data">
+            <td data-title="'EventTime'" sortable="'eventTime'">{{row.eventTime}}</td>
+            <td data-title="'Action'" sortable="'action'">{{row.action}}</td>
+            <td data-title="'bizLocation'" sortable="'bizLocation'">
+                <div ng-class="(checkSGLN(row.bizLocation, row))? 'badge badge-success':'badge badge-danger'"> {{row.bizLocation.value}}</div>
+            </td>
+
+            <td data-title="'epcList'" sortable="'epcList'">{{row.epcList}}</td>
+            <td data-title="'quantityList'" sortable="'quantityList'">
+                <div ng-repeat="v in row.quantityList track by $index">
+                    <div ng-class="(checkLGTIN(v, row))? 'badge badge-success':'badge badge-danger'">{{v.lgtin}}</div>
+                </div>
+            </td>
+            <td data-title="'sourceList'" sortable="'sourceList'">
+                <div ng-repeat="v in row.sourceList track by $index">
+                    <div ng-class="(checkSGLN(v, row))? 'badge badge-success':'badge badge-danger'">{{v.value}}</div>
+                </div>
+            </td>
+            <td data-title="'destinationList'" sortable="'destinationList'">
+                <div ng-repeat="v in row.destinationList track by $index">
+                    <div ng-class="(checkSGLN(v, row))? 'badge badge-success':'badge badge-danger'">{{v.value}}</div>
+                </div>
+            </td>
+            <td data-title="'eventID'" sortable="'eventID'">{{row.eventID}}</td>
+            <td data-title="'Filename'">{{row.opts.filename}}</td>
+        </tr>
+    </table>
+
+    <h3>Transformation events </h3>
+    <table  ng-table="transformationTableParams" template-pagination="custom/pager" class="table table-condensed table-bordered table-striped">
+        <tr ng-repeat="row in $data">
+            <td data-title="'EventTime'" sortable="'eventTime'">{{row.eventTime}}</td>
+            <td data-title="'bizLocation'" sortable="'bizLocation'">
+                <div ng-class="(checkSGLN(row.bizLocation, row))? 'badge badge-success':'badge badge-danger'"> {{row.bizLocation}}</div>
+            </td>
+
+            <td data-title="'inputEPCList'" sortable="'inputEPCList'">{{row.inputEPCList}}</td>
+            <td data-title="'inputQuantityList'" sortable="'inputQuantityList'">
+                <div ng-repeat="v in row.inputQuantityList track by $index">
+                    <div ng-class="(checkLGTIN(v, row))? 'badge badge-success':'badge badge-danger'">{{v.value}}</div>
+                </div>
+            </td>
+            <td data-title="'outputEPCList'" sortable="'outputEPCList'">{{row.outputEPCList}}</td>
+            <td data-title="'outputQuantityList'" sortable="'outputQuantityList'">
+                <div ng-repeat="v in row.outputQuantityList track by $index">
+                    <div ng-class="(checkLGTIN(v, row))? 'badge badge-success':'badge badge-danger'">{{v.value}}</div>
+                </div>
+            </td>
+            <td data-title="'sourceList'" sortable="'sourceList'">
+                <div ng-repeat="v in row.sourceList track by $index">
+                    <div ng-class="(checkSGLN(v, row))? 'badge badge-success':'badge badge-danger'">{{v.value}}</div>
+                </div>
+            </td>
+            <td data-title="'destinationList'" sortable="'destinationList'">
+                <div ng-repeat="v in row.destinationList track by $index">
+                    <div ng-class="(checkSGLN(v, row))? 'badge badge-success':'badge badge-danger'">{{v.value}}</div>
+                </div>
+            </td>
+            <td data-title="'eventID'" sortable="'eventID'">{{row.eventID}}</td>
+            <td data-title="'Filename'">{{row.opts.filename}}</td>
+        </tr>
+    </table>
+
+
+    <h3>Aggregation events <small>(aggregation,deaggregation)</small></h3>
+    <table  ng-table="aggregationTableParams" template-pagination="custom/pager" class="table table-condensed table-bordered table-striped">
+        <tr ng-repeat="row in $data">
+            <td data-title="'EventTime'" sortable="'eventTime'">{{row.eventTime}}</td>
+            <td data-title="'parentID'" sortable="'parentID'">{{row.parentID}}</td>
+            <td data-title="'childEPCs'" sortable="'childEPCs'">{{row.childEPCs}}</td>
+            <td data-title="'action'" sortable="'action'">{{row.action}}</td>
+            <td data-title="'bizLocation'" sortable="'bizLocation'">
+                <div ng-class="(checkSGLN(row.bizLocation, row))? 'badge badge-success':'badge badge-danger'"> {{row.bizLocation}}</div>
+            </td>
+            <td data-title="'quantityElement'" sortable="'quantityElement'">
+                <div ng-repeat="v in row.quantityElement track by $index">
+                    <div ng-class="(checkLGTIN(v, row))? 'badge badge-success':'badge badge-danger'">{{v.value}}</div>
+                </div>
+            </td>
+            <td data-title="'sourceList'" sortable="'sourceList'">
+                <div ng-repeat="v in row.sourceList track by $index">
+                    <div ng-class="(checkSGLN(v, row))? 'badge badge-success':'badge badge-danger'">{{v}}</div>
+                </div>
+            </td>
+            <td data-title="'destinationList'" sortable="'destinationList'">
+                <div ng-repeat="v in row.destinationList track by $index">
+                    <div ng-class="(checkSGLN(v, row))? 'badge badge-success':'badge badge-danger'">{{v}}</div>
+                </div>
+            </td>
+            <td data-title="'eventID'" sortable="'eventID'">{{row.eventID}}</td>
+            <td data-title="'Filename'">{{row.opts.filename}}</td>
+        </tr>
+    </table>
+
+    <h3>Purchase Orders</h3>
+    <table  ng-table="POTableParams" template-pagination="custom/pager" class="table table-condensed table-bordered table-striped">
+        <tr ng-repeat="row in $data">
+            <td data-title="'creationDateTime'" sortable="'creationDateTime'">{{row.creationDateTime}}</td>
+            <td data-title="'orderIdentification'" sortable="'orderIdentification'">{{row.orderIdentification}}</td>
+            <td data-title="'orderLineItem'" sortable="'orderLineItem'">{{row.orderLineItem}}</td>
+            <td data-title="'buyer'" sortable="'buyer'">
+                <div ng-class="checkGLN(row.buyer, row)? 'badge badge-success':'badge badge-danger'"> {{row.buyer}}</div>
+            </td>
+            <td data-title="'seller'" sortable="'seller'">
+                <div ng-class="(checkGLN(row.seller, row))? 'badge badge-success':'badge badge-danger'"> {{row.seller}}</div>
+            </td>
+            <td data-title="'shipFrom'" sortable="'shipFrom'">
+                <div ng-class="(checkGLN(row.shipFrom, row))? 'badge badge-success':'badge badge-danger'"> {{row.shipFrom}}</div>
+            </td>
+            <td data-title="'shipTo'" sortable="'shipTo'">
+                <div ng-class="(checkGLN(row.shipTo, row))? 'badge badge-success':'badge badge-danger'"> {{row.shipTo}}</div>
+            </td>
+            <td data-title="'Filename'">{{row.opts.filename}}</td>
+        </tr>
+    </table>
+
+
+    <h3>Despatch Advice</h3>
+    <table  ng-table="DATableParams" template-pagination="custom/pager" class="table table-condensed table-bordered table-striped">
+        <tr ng-repeat="row in $data">
+            <td data-title="'creationDateTime'" sortable="'creationDateTime'">{{row.creationDateTime}}</td>
+            <td data-title="'receiver'" sortable="'receiver'">
+                <div ng-class="(checkGLN(row.receiver, row))? 'badge badge-success':'badge badge-danger'"> {{row.receiver}}</div>
+            </td>
+            <td data-title="'shipper'" sortable="'shipper'">
+                <div ng-class="(checkGLN(row.shipper, row))? 'badge badge-success':'badge badge-danger'"> {{row.shipper}}</div>
+            </td>
+            <td data-title="'shipTo'" sortable="'shipTo'">
+                <div ng-class="(checkGLN(row.shipTo, row))? 'badge badge-success':'badge badge-danger'"> {{row.shipTo}}</div>
+            </td>
+            <td data-title="'shipFrom'" sortable="'shipFrom'">
+                <div ng-class="(checkGLN(row.shipFrom, row))? 'badge badge-success':'badge badge-danger'"> {{row.shipFrom}}</div>
+            </td>
+            <td data-title="'DAIdentifier'" sortable="'despatchAdviceIdentification'">{{row.despatchAdviceIdentification}}</td>
+            <td data-title="'purchaseOrder'" sortable="'purchaseOrder'">
+                <div ng-class="(checkBM(row.purchaseOrder, row))? 'badge badge-success':'badge badge-danger'"> {{row.purchaseOrder}}</div>
+            </td>
+            <td data-title="'despatchAdviceLogisticUnit'" sortable="'despatchAdviceLogisticUnit'">{{row.despatchAdviceLogisticUnit}}</td>
+            <td data-title="'Filename'">{{row.opts.filename}}</td>
+        </tr>
+    </table>
+
+    <h3>Receive Advice</h3>
+    <table ng-table="RATableParams" template-pagination="custom/pager" class="table table-condensed table-bordered table-striped">
+        <tr ng-repeat="row in $data">
+            <td data-title="'creationDateTime'" sortable="'creationDateTime'">{{row.creationDateTime}}</td>
+            <td data-title="'receiver'" sortable="'receiver'">
+                <div ng-class="(checkGLN(row.receiver,row))? 'badge badge-success':'badge badge-danger'"> {{row.receiver}}</div>
+            </td>
+            <td data-title="'shipper'" sortable="'shipper'">
+                <div ng-class="(checkGLN(row.shipper,row))? 'badge badge-success':'badge badge-danger'"> {{row.shipper}}</div>
+            </td>
+            <td data-title="'shipTo'" sortable="'shipTo'">
+                <div ng-class="(checkGLN(row.shipTo,row))? 'badge badge-success':'badge badge-danger'"> {{row.shipTo}}</div>
+            </td>
+            <td data-title="'RAIdenfitication'" sortable="'receivingAdviceIdentification'">{{row.receivingAdviceIdentification}}</td>
+            <td data-title="'despatchAdvice'" sortable="'despatchAdvice'">
+               <div ng-class="(checkBM(row.despatchAdvice,row))? 'badge badge-success':'badge badge-danger'"> {{row.despatchAdvice}}</div>
+            </td>
+            <td data-title="'receivingAdviceLogisticUnit'" sortable="'receivingAdviceLogisticUnit'">{{row.receivingAdviceLogisticUnit}}</td>
+            <td data-title="'Filename'">{{row.opts.filename}}</td>
+        </tr>
+    </table>
+
+        <!--<table ng-table-dynamic="demo.tableParams with demo.cols"   class="table table-condensed table-bordered table-striped">-->
+            <!--<tr ng-repeat="row in $data">-->
+                <!--<td ng-repeat="col in $columns" ng-bind-html="col.getValue(this, row)"></td>-->
+            <!--</tr>-->
+        <!--</table>-->
+    Process Log ({{log_length}})
+        <ul>
+            <li ng-repeat="(key,val) in log">{{key}}
+              <ul>
+                  <li ng-repeat="(key2, v2) in val">
+                      {{key2}}
+                  </li>
+              </ul>
+            </li>
+        </ul>
+</div>
+</div>
+
+</div>
+</div>
+<footer>
+    <div class="container">
+        <p>Happy coding.</p>
+    </div>
+</footer>
+</div> <!-- /container -->
+
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="./js/vendor/jquery-3.2.1.js"></script>
+<script src="./js/vendor/bootstrap.min.js"></script>
+</body></html>

@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<despatch_advice:despatchAdviceMessage 
+    xmlns:despatch_advice="urn:gs1:ecom:despatch_advice:xsd:3" 
+    xmlns:sh="http://www.unece.org/cefact/namespaces/StandardBusinessDocumentHeader" 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:gs1:ecom:despatch_advice:xsd:3 ../Schemas/gs1/ecom/DespatchAdvice.xsd">
+    <sh:StandardBusinessDocumentHeader>
+        <sh:HeaderVersion>1.0</sh:HeaderVersion>
+        <sh:Sender>
+            <sh:Identifier Authority="GS1"/>
+            <sh:ContactInformation>
+                <sh:Contact>John Doe</sh:Contact>
+                <sh:EmailAddress>John_Doe@purchasing.XYZretailer.com</sh:EmailAddress>
+                <sh:FaxNumber>+1-212-555-1213</sh:FaxNumber>
+                <sh:TelephoneNumber>+1-212-555-2122</sh:TelephoneNumber>
+                <sh:ContactTypeIdentifier>Buyer</sh:ContactTypeIdentifier>
+            </sh:ContactInformation>
+        </sh:Sender>
+        <sh:Receiver>
+            <sh:Identifier Authority="GS1"/>
+            <sh:ContactInformation>
+                <sh:Contact>Mary Smith</sh:Contact>
+                <sh:EmailAddress>Mary_Smith@widgets.com</sh:EmailAddress>
+                <sh:FaxNumber>+1-312-555-1214</sh:FaxNumber>
+                <sh:TelephoneNumber>+1-312-555-2125</sh:TelephoneNumber>
+                <sh:ContactTypeIdentifier>Seller</sh:ContactTypeIdentifier>
+            </sh:ContactInformation>
+        </sh:Receiver>
+        <sh:DocumentIdentification>
+            <sh:Standard>GS1</sh:Standard>
+            <sh:TypeVersion>3.3</sh:TypeVersion>
+            <sh:InstanceIdentifier>100002</sh:InstanceIdentifier>
+            <sh:Type>despatchAdvice</sh:Type>
+            <sh:MultipleType>false</sh:MultipleType>
+            <sh:CreationDateAndTime>2006-01-10T12:00:01.000-05:00</sh:CreationDateAndTime>
+        </sh:DocumentIdentification>
+    </sh:StandardBusinessDocumentHeader>
+    <!-- ********************************************************************************** -->
+    <!-- NOTE : Comments for a field appear BELOW the field. -->
+    <!-- This is a Despatch Advice (a.k.a. ASN - Advance Shipment Notification), submitted from a Supplier to a Retailer. -->
+    <!-- Currently, the supplier sends a copy ("shadows") of the DA, in this format to the Blockchain. -->
+    <!-- MANDATORY fields are indicated. -->
+    <!-- ********************************************************************************** -->
+    <despatchAdvice>
+        <creationDateTime>2011-04-11T14:58:56.591Z</creationDateTime>
+        <!-- MANDATORY: DA creation time. -->
+        <!-- UTC time (ISO 8601) when the PO was created. -->
+        <documentStatusCode>ORIGINAL</documentStatusCode>
+        <!-- Do not change. -->
+        <despatchAdviceIdentification>
+            <entityIdentification>urn:epcglobal:cbv:bt:5412345000037:PO3352:DA349875</entityIdentification>
+            <!-- MANDATORY -->
+            <!-- urn:epcglobal:cbv:bt:ShipToGLN:PONumber:ASNNumber -->
+            <!-- Despatch Advice Number: The format for this is urn:epcglobal:cbv:bt:<gln>:<po-number>:<da-number> -->
+            <!-- where <gln> is the "SHIP TO GLN FOR THE PO". <da-number> should NOT contain a ":" character.  -->
+            <!-- IDEALLY, the da-number should be the ASN number, if the supplier is submitting an ASN to the retailer -->
+
+            <!-- Using this notation allows a retailer to put in a reference to this DA (using the same format) -->
+            <!-- from other EPCIS events and Business Txn documents (such as RA). -->
+            <!-- Reference: https://www.gs1.org/sites/default/files/docs/epc/CBV-Standard-1-2-1-r-2017-05-05.pdf  [Section 8.5.2] -->
+            <contentOwner>
+                <gln>4098765000010</gln>
+                <!-- OPTIONAL: Shipper Home office GLN. -->
+            </contentOwner>
+        </despatchAdviceIdentification>
+        <receiver>
+            <gln>5412345000013</gln>
+            <!-- MANDATORY: Retailer Home office GLN.  -->
+        </receiver>
+        <shipper>
+            <gln>4098765000010</gln>
+            <!-- MANDATORY: Seller/Shipper Home office GLN -->
+        </shipper>
+        <shipTo>
+            <gln>5412345000037</gln>
+            <!-- MANDATORY: This is the GLN of the Retailer DC. The GLN of the DC needs to be extracted from the PO. -->
+        </shipTo>
+        <shipFrom>
+            <gln>4098765000010</gln>
+            <!-- MANDATORY: Shipper Dispatch location gln (factory). -->
+        </shipFrom>
+        <despatchInformation>
+            <actualShipDateTime>2011-04-11T18:58:56.591Z</actualShipDateTime>
+            <!-- OPTIONAL for now: TBD after discussion with Suppliers (how accurate is this shipdatetime?). -->
+        </despatchInformation>
+        <!-- NOTE: <despatchInformation>, </despatchInformation> tags should not be omitted even if no <actualShipDataTime>.-->
+        <purchaseOrder>
+            <entityIdentification>urn:epcglobal:cbv:bt:5412345000037:PO3352</entityIdentification>
+            <!-- MANDATORY -->
+            <!-- Qn for suppliers: Is it possible that ASN may correspond to multiple POs? -->
+            <!-- If that is the case, then this needs to be pushed down to the per item level. -->
+            <!-- BACKEND NODE: Connector needs to convert this into a format where the PO only -->
+            <!--               appears at the line item level (even if it is the same PO). -->
+        </purchaseOrder>
+        <despatchAdviceLogisticUnit>
+            <!-- MANDATORY: A DA Logistic Unit is for each pallet. -->
+            <packageTypeCode>PE (pallet, modular)</packageTypeCode>
+            <!-- MANDATORY -->
+            <!-- Code that indicates package type. -->
+            <!-- Reference: http://apps.gs1.org/GDD/Pages/clDetails.aspx?semanticURN=urn:gs1:gdd:cl:PackageTypeCode&release=1 -->
+            <logisticUnitIdentification>
+                <sscc>409876506700001010</sscc>
+                <!-- MANDATORY : This is the ID of the pallet. -->
+                <!-- Reference:  https://www.gs1.org/sites/default/files/docs/epc/GS1_EPC_TDS_i1_10.pdf  Section 7.2 -->
+                <additionalLogisticUnitIdentification additionalLogisticUnitIdentificationTypeCode="SHIPPER_ASSIGNED">4098765xyz123</additionalLogisticUnitIdentification>
+                <!-- <codeListVersion></codeListVersion> -->
+                <!-- This field can be used to represent the internal Pallet ID of a Supplier, if it is in the Non SSCC Form. -->
+                <!-- <CompanyPrefix><PalletNumber> -->
+            </logisticUnitIdentification>
+            <despatchAdviceLineItem>
+                <lineItemNumber>1</lineItemNumber>
+                <!-- MANDATORY : This is the DA line item, which is a sequential number. -->
+                <despatchedQuantity measurementUnitCode="KGM">48</despatchedQuantity>
+                <!-- MANDATORY -->
+                <countryOfOrigin>DE</countryOfOrigin>
+                <transactionalTradeItem>
+                    <gtin>08712345678906</gtin>
+                    <!-- MANDATORY -->
+                </transactionalTradeItem>
+                <requestedItemIdentification>
+                    <gtin>40987650000223</gtin>
+                    <!-- MANDATORY: This is what was requested in the PO. -->
+                </requestedItemIdentification>
+                <purchaseOrder>
+                    <entityIdentification>urn:epcglobal:cbv:bt:5412345000037:PO3352</entityIdentification>
+                    <!-- MANDATORY -->
+                    <lineItemNumber>1</lineItemNumber>
+                    <!-- MANDATORY : This is the line item in the PO, to which this DA line item corresponds to -->
+                </purchaseOrder>
+            </despatchAdviceLineItem>
+        </despatchAdviceLogisticUnit>
+    </despatchAdvice>
+</despatch_advice:despatchAdviceMessage>

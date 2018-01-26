@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<epcis:EPCISDocument 
+  xmlns:epcis="urn:epcglobal:epcis:xsd:1" 
+  xmlns:example="http://ns.example.com/epcis" 
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" creationDate="2005-07-11T11:30:47.0Z" schemaVersion="1.2">
+  <EPCISBody>
+    <EventList>
+      <AggregationEvent>
+        <eventTime>2001-01-01T01:01:00.000Z</eventTime>
+        <!--WHEN-->
+        <!--MANDATORY. UTC time (ISO 8601) when event occurred.-->
+        <eventTimeZoneOffset>+00:00</eventTimeZoneOffset>
+        <!--MANDATORY. Time-zone of location, as an offset from UTC.-->
+        <baseExtension> 
+          <eventID>359047db9ad53fd11d1318ffc7a628866f460828f861c17e53a117aef815c8ee</eventID>
+        </baseExtension>
+        <parentID>urn:epc:id:sscc:9999999.9999999999</parentID>
+        <childEPCs/>
+        <action>DELETE</action> 
+        <bizLocation><id>urn:epc:id:sgln:9999999.99999.99999999</id></bizLocation>
+        <extension>
+          <childQuantityList>
+            <quantityElement>
+              <epcClass>urn:epc:class:lgtin:9999999.999999.999999</epcClass>
+              <quantity>0</quantity>
+              <uom>CS</uom>
+            </quantityElement>
+          </childQuantityList>
+        </extension>
+      </AggregationEvent>
+    </EventList>
+  </EPCISBody>
+</epcis:EPCISDocument>
