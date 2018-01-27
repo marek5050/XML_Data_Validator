@@ -7,7 +7,8 @@
     "example": "examples"
   },
   "scripts": {
-    "start": "python2.7 -m SimpleHTTPServer 8000"
+    "start": "python2.7 -m SimpleHTTPServer 8000",
+    "publish": "git push; git push -u public;"
   },
   "repository": {
     "type": "git",
