@@ -268,6 +268,13 @@ component('gs1validator', {
         '<span >{{model.sgln}}</span>' +
     '</div>'+
     '<div class="form-group row">' +
+        '<label class="col-sm-2 col-form-label">SGLN to GLN</label>' +
+        '<div class="col-sm-5">'+
+            '<input ng-model="model.sgln2gln" placeholder="urn:epc:id:sgln:0614141.00001.0" class="form-control form-control-sm"  type="text">' +
+        '</div>' +
+        '<span >{{model.sgln2gln_result}}</span>' +
+    '</div>' +
+    '<div class="form-group row">' +
         '<label class="col-sm-2 col-form-label">GTIN to LGTIN</label>' +
         '<div class="col-sm-5">'+
             '<input ng-model="model.gtin" class="form-control form-control-sm"  type="text" placeholder="10614141073464" >' +
@@ -280,13 +287,6 @@ component('gs1validator', {
             '<input ng-model="model.lgtin2gtin" class="form-control form-control-sm"  type="text" placeholder="urn:epc:class:lgtin:0614141.107346.101">' +
         '</div>' +
         '<span >{{model.lgtin2gtin_result}}</span>' +
-    '</div>' +
-    '<div class="form-group row">' +
-        '<label class="col-sm-2 col-form-label">SGLN to GLN</label>' +
-        '<div class="col-sm-5">'+
-            '<input ng-model="model.sgln2gln" placeholder="urn:epc:id:sgln:0614141.00001.0" class="form-control form-control-sm"  type="text">' +
-        '</div>' +
-        '<span >{{model.sgln2gln_result}}</span>' +
     '</div>' +
     '</form>',
     controller: function PhoneListController($scope, $http) {
@@ -308,7 +308,16 @@ component('gs1validator', {
         });
         $scope.$watch("model.lgtin2gtin", function(newVal, oldVal) {
             if (newVal !== oldVal) {
-                $scope.model.lgtin2gtin_result = LGTIN2GTIN(newVal);
+                var gtin = LGTIN2GTIN(newVal);
+                if(typeof gtin === 'object' ){
+                    if(gtin.errors && gtin.errors.length != 0 ){
+                        $scope.model.lgtin2gtin_result = gtin.errors
+                    }else{
+                        $scope.model.lgtin2gtin_result = gtin.value
+                    }
+                } else{
+                    $scope.model.lgtin2gtin_result = gtin;
+                }
             }
         });
         $scope.$watch("model.sgln2gln", function(newVal, oldVal) {
